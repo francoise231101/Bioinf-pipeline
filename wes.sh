@@ -13,7 +13,7 @@
 ## Known bugs:
 
 # Include the configuration file
-. /home/francoise/apps/config.sh
+. ~/WES-SomaticMutation/config.sh
 
 # Redirect stdout and stderr to the log file
 exec &> "$LOGFILE"
@@ -28,6 +28,8 @@ fi
 
 ANALYSISDIR="$1"
 RAWDATADIR="$2"
+
+# example : sh /home/brook/WES-SomaticMutation/wes.sh /home/brook/work/NAWES-WeiJunLI/analysis-06122023/ /home/brook/work/NAWES-WeiJunLI/rawdata/
 
 check_directory_exists "$RAWDATADIR"
 

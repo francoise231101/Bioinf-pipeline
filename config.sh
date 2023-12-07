@@ -2,13 +2,13 @@
 
 # Configuration settings
 
+# Log file path
+LOGFILE="/home/brook/share/logfile-$(date +"%Y-%m-%d").txt"
+
 # Directory paths
 SEARCH_DIR=~/apps
 SHARE_DIR=~/share
 WORK_DIR=~/work
-
-# Log file path
-LOGFILE="/home/francoise/share/logfile-$(date +"%Y-%m-%d").txt"
 
 # Result directories
 RESULT_QC=""
@@ -75,24 +75,22 @@ setup_paths() {
     RAWDATADIR="$2"
     BASEDIR=$(basename "$RAWDATADIR")
 
-    RESULT_QC="$ANALYSISDIR/$BASEDIR"
-    create_directory "$RESULT_QC"
-    create_directory "$RESULT_QC/RESULT_TRIM"
-    create_directory "$RESULT_QC/RESULT_MAPPING"
-    create_directory "$RESULT_QC/RESULT_MUTECT2"
-
     # Flag files for each step
     QC_FLAG="$RESULT_QC/qc_completed.flag"
     TRIM_FLAG="$RESULT_QC/trim_completed.flag"
-    INDEX_FLAG="$RESULT_QC/index_completed.flag"
+    INDEX_FLAG="$SHARE_DIR/index_completed.flag"
     MAPPING_FLAG="$RESULT_QC/mapping_completed.flag"
     SORT_PICARD_FLAG="$RESULT_QC/sort_picard_completed.flag"
     SORT_SAMTOOLS_FLAG="$RESULT_QC/sort_samtools_completed.flag"
     MARK_DUPLICATES_FLAG="$RESULT_QC/duplication_removed_completed.flag"
 
+    RESULT_QC="$ANALYSISDIR/$BASEDIR"
+    create_directory "$RESULT_QC"
+    create_directory "$RESULT_QC/RESULT_TRIM"
+    create_directory "$RESULT_QC/RESULT_MAPPING"
+
     REFDIR="$SHARE_DIR/ref"
     create_directory "$REFDIR"
-
     REF_FILE="$REFDIR/hg38.fa"
     PREFIX_REF="$REFDIR/hg38_BWA_idx"
 
@@ -118,16 +116,11 @@ setup_paths() {
         # Check if any file with the specified prefix exists
         file_count=$(find "$REFDIR" -maxdepth 1 -type f -name "$(basename "$PREFIX_REF").*" | wc -l)
 
-        log_message "File count: $file_count"
-
         if [ "$file_count" -gt 0 ]; then
             log_message "Skipping indexing as it has been completed before"
         else
-            log_message "Indexing started..."
             bwa index -p "$PREFIX_REF" "$REFDIR/hg38.fa" || exit_with_error "Failed to create BWA index."
-            log_message "Indexing completed."
             create_flag "$INDEX_FLAG"
-            log_message "Index flag created."
         fi
     else
         log_message "Skipping indexing as it has been completed before"
