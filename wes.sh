@@ -16,7 +16,8 @@
 . ~/WES-SomaticMutation/config.sh
 
 # Redirect stdout and stderr to the log file
-exec &> "$LOGFILE"
+#exec &> "$LOGFILE"
+exec &> >(tee -a "$LOGFILE")
 
 # Log the start of the pipeline
 log_message "Starting the pipeline"
