@@ -3,7 +3,7 @@
 # Configuration settings
 
 # Log file path
-LOGFILE="/home/brook/share/logfile-$(date +"%Y-%m-%d").txt"
+LOGFILE="/home/brook/share/logfile-$(date +"%Y-%m-%d_%H-%M-%S").txt"
 
 # Directory paths
 SEARCH_DIR=~/apps
